@@ -36,11 +36,23 @@ def show_feature():
     def foodRec():
         st.title("Pet Care Assistant")
 
-        # Collect user input for pet details
+        # Collect user input for pet type
         pet_type = st.selectbox("Select Pet Type", options=["Dog", "Cat", "Bird", "Other"])
+        if pet_type == "Other":
+            pet_type = st.text_input("Please specify the pet type")
+
+        # Collect user input for pet age
         pet_age = st.number_input("Enter Pet Age (in years)", min_value=0, max_value=30, value=1, step=1)
+
+        # Collect user input for pet breed
         pet_breed = st.text_input("Enter Pet Breed")
-        pet_mood = st.selectbox("Select Pet Mood", options=["Happy", "Anxious", "Aggressive", "Calm", "Neutral"])
+
+        # Collect user input for pet mood
+        pet_mood = st.selectbox("Select Pet Mood", options=["Happy", "Anxious", "Aggressive", "Calm", "Neutral", "Other"])
+        if pet_mood == "Other":
+            pet_mood = st.text_input("Please specify the pet mood")
+
+        # Collect user input for health condition
         health_condition = st.text_area("Describe any Health Conditions", value="None")
 
         # Button to trigger recommendation
