@@ -114,6 +114,7 @@ def show_feature():
         elif page == "View Pets":
             show_pet_data()
 
-    main()
+    if __name__ == "__main__":
+        main()
 
 
