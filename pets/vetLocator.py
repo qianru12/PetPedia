@@ -10,4 +10,3 @@ def show_feature():
     )
     st.map(df)
     st.write("Content.")
-v
