@@ -59,8 +59,8 @@ with col2:
     if main_selection == "Pets":
         pets.show_pets_navigation()
 
-    if main_selection == "addPetTest":
-        test.show_features()
+    if main_selection == "Test":
+        test.show_feature()
         
     else:
         st.title("Welcome to PetPedia")

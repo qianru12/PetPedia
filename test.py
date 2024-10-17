@@ -2,7 +2,7 @@ import sqlite3
 import streamlit as st
 
 # Function to insert pet data into SQLite database
-def show_features():
+def show_feature():
   st.write("test")
   def insert_pet_data(pet_type, age, breed, mood, health_condition):
       conn = sqlite3.connect('petpedia.db')
