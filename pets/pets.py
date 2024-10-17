@@ -67,7 +67,7 @@ def show_pets_navigation():
     if st.session_state['nav'] == "Vet Locator":
         vetLocator.show_feature()
 
-    if st.session_state['nav'] == "Chatbot":
+    else:
         chatbot.show_feature()
 
 # Handle the form submission from the navbar
