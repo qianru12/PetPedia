@@ -1,6 +1,7 @@
 import streamlit as st
 from pets import pets
 import animalIdentification
+import test
 
 # Custom CSS for radio buttons
 st.markdown("""
@@ -39,7 +40,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Create two columns for layout
-col1, col2 = st.columns([1, 3])  # Adjust the ratio for width (1:3 is an example)
+col1, col2, col3 = st.columns([1, 3])  # Adjust the ratio for width (1:3 is an example)
 
 # Left-side navigation
 with col1:
@@ -52,6 +53,19 @@ with col1:
     )
 
 with col2:
+    if main_selection == "Animal Identification":
+        animalIdentification.main()
+
+    if main_selection == "Pets":
+        pets.show_pets_navigation()
+
+    if main_selection == "addPetTest":
+        test.show_features()
+    else:
+        st.title("Welcome to PetPedia")
+        st.write("Select a page from the left sidebar.")
+
+with col3:
     if main_selection == "Animal Identification":
         animalIdentification.main()
 
