@@ -101,6 +101,7 @@ def create_table():
 
 # Main application
 def main():
+    st.write("Test")
     st.sidebar.title("Navigation")
     page = st.sidebar.radio("Go to", ["Add Pet", "View Pets"])
 
