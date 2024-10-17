@@ -74,6 +74,46 @@ def show_feature():
         health_condition = st.text_area("Describe any Health Conditions",
                                         value="None")
 
+        import streamlit as st
+        from PIL import Image
+
+        # Define the function to analyze food.
+        def food_analyzing(Type, Age, Breed, Mood, Health_Condition):
+            uploaded_file = st.file_uploader("Upload a food image", type=["jpg", "jpeg", "png"])
+
+            if uploaded_file is not None:
+                # Open and display the image
+                image = Image.open(uploaded_file)
+                st.image(image, caption="Uploaded Image", use_column_width=True)
+
+                # Simulate the AI Model Response (Replace this with real API call if needed)
+                model_response = f"""
+                Food in the image:
+                Example Food Item (Replace with actual detection)
+
+                Analysis:
+                A {Age}-year-old {Mood} {Breed} {Type} with {Health_Condition} can eat some items, but others may not be safe.
+                Please consult a veterinarian for more details.
+                """
+
+                st.write("### Analysis:")
+                st.text(model_response)
+            else:
+                st.warning("Please upload a food-related image.")
+
+        # Streamlit user inputs and function call
+        st.title("Animal Food Analyzer")
+
+        # Collect user inputs
+        animal_type = st.selectbox("Select Animal Type", ["Dog", "Cat", "Other"])
+        age = st.text_input("Enter Animal's Age (in years)", value="2")
+        breed = st.text_input("Enter Animal's Breed", value="Bulldog")
+        mood = st.selectbox("Select Animal's Mood", ["Happy", "Sad", "Neutral"])
+        health_condition = st.text_input("Enter Any Known Health Condition", value="None")
+
+        # Button to trigger analysis
+        if st.button("Analyze Food"):
+            food_analyzing(animal_type, age, breed, mood, health_condition)
         # Button to trigger recommendation
         if st.button("Generate Food Recommendation"):
             if pet_type and pet_breed and pet_age and pet_mood:
