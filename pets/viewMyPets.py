@@ -12,7 +12,7 @@ genai.configure(api_key=st.secrets['GOOGLE_API_KEY'])
 # Function to create description using Gemini
 def create_description(image):
     image_pil = Image.open(image)
-    model = genai.GenerativeModel("gemini-pro-vision")
+    model = genai.GenerativeModel("gemini-1.5-flash")
     response = model.generate_content(["Describe in detail the animal in this image", image_pil])
     return response.text
 
