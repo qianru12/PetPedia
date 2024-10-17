@@ -4,7 +4,7 @@ from PIL import Image
 from io import BytesIO
 import openai  # Ensure you have the OpenAI package installed
 
-# Set your OpenAI API key
+
 client = OpenAI(api_key=st.secrets['OPENAI_API_KEY'])
 
 # Function to edit image using DALL-E
