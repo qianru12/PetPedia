@@ -8,7 +8,7 @@ from tensorflow.keras.applications.inception_v3 import InceptionV3, preprocess_i
 from io import BytesIO
 
 # Configure the Google Generative AI key
-genai.configure(api_key=st.secrets["GeminiAI_API_Key"])
+genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
 
 # Load a pre-trained image classification model (InceptionV3)
 model = InceptionV3(weights='imagenet')
