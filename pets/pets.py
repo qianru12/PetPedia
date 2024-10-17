@@ -70,7 +70,7 @@ def show_pets_navigation():
     if st.session_state['nav'] == "Food and Supply Recommendations":
         foodAndSupplyRecommendation.show_feature()
 
-    elif st.session_state['nav'] == "viewMyPets":
+    elif st.session_state['nav'] == "View My Pets":
         viewMyPets.main()
 
     elif st.session_state['nav'] == "Vet Locator":
