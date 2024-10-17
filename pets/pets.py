@@ -74,7 +74,7 @@ def show_pets_navigation():
         viewMyPets.main()
 
     elif st.session_state['nav'] == "Vet Locator":
-        vetLocator.show_feature()
+        vetLocator.vet_locator([3.1390, 101.6869])
 
     elif st.session_state['nav'] == "Chatbot":
         chatbot.show_feature()
