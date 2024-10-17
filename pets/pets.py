@@ -1,5 +1,5 @@
 import streamlit as st
-import foodAndSupplyRecommendation, petHealthMonitoringAndAlerts, vetLocator, chatbot
+from pets import foodAndSupplyRecommendation, petHealthMonitoringAndAlerts, vetLocator, chatbot
 
 # Function to render the sticky navigation bar
 def show_navbar():
