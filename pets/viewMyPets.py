@@ -1,27 +1,34 @@
-import sqlite3
-import streamlit as st
+from openai import OpenAI
+from google.colab import userdata
 from PIL import Image
-from io import BytesIO
-from openai import OpenAI  # Ensure you have the OpenAI package installed
-
+import io
+import base64
+import google.generativeai as genai
 
 client = OpenAI(api_key=st.secrets['OPENAI_API_KEY'])
+genai.configure(api_key = userdata.get("GOOGLE_API_KEY"))
 
 # Function to edit image using DALL-E
-def edit_image_with_dalle(image):
-    image.seek(0)  # Ensure the stream is at the start
+def create_image_from_description(prompt):
     try:
-        response = client.image.create_variation(
-            model = 'dall-e-3',
-            image=open(image, 'rb'),
-            prompt="Create a vivid style picture similar to this one.",
-            style = 'vivid'
-            size = '512x512'
+        response = client.images.generate(
+            model="dall-e-3",
+            prompt=prompt,
+            size="512x512",
+            quality="standard"
         )
         return response.data[0].url
     except Exception as e:
-        st.error(f"Error using DALL-E: {e}")
+        print(f"An error occurred: {e}")
         return ""
+
+def create_description(image):
+  import PIL.Image
+  image = PIL.Image.open(image)
+  model = genai.GenerativeModel("gemini-1.5-flash")
+  response = model.generate_content(["describe in details about the animal in the image", image])
+  return response
+
 
 # Function to insert pet data into SQLite database
 def insert_pet_data(pet_type, age, breed, personality, health_condition, image_url):
@@ -55,13 +62,10 @@ def show_pet_form():
 
     if st.button("Submit"):
         if uploaded_image is not None:
-            image = Image.open(uploaded_image)
-            file_stream = BytesIO()
-            image.save(file_stream, format='PNG')
-            file_stream.seek(0)  # Reset stream position
+            prompt = create_description()
+            image_url = create_image_from_description(f"Base on this description: {prompt},create an avatar for this animal.")
 
-            # Generate the image URL using DALL-E API
-            image_url = edit_image_with_dalle(file_stream)
+
 
             if image_url:
                 # Insert all details into the database
