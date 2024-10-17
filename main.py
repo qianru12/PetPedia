@@ -40,7 +40,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Create two columns for layout
-col1, col2, col3 = st.columns([1, 3])  # Adjust the ratio for width (1:3 is an example)
+col1, col2, col3 = st.columns([1, 4])  # Adjust the ratio for width (1:3 is an example)
 
 # Left-side navigation
 with col1:
