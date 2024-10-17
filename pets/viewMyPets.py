@@ -11,11 +11,14 @@ client = OpenAI(api_key=st.secrets['OPENAI_API_KEY'])
 def edit_image_with_dalle(image):
     image.seek(0)  # Ensure the stream is at the start
     try:
-        response = client.image.edit(
-            image=image,
-            instructions="Create a vivid style picture similar to this one."
+        response = client.image.create_variation(
+            model = 'dall-e-3',
+            image=open(image, 'rb'),
+            prompt="Create a vivid style picture similar to this one.",
+            style = 'vivid'
+            size = '512x512'
         )
-        return response['data']['url']
+        return response.data[0].url
     except Exception as e:
         st.error(f"Error using DALL-E: {e}")
         return ""
