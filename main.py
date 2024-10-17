@@ -15,7 +15,6 @@ st.markdown("""
     }
 
     .stRadio [role=radiogroup] label {
-        background-color: #f0f2f6;
         padding: 10px 15px;
         border-radius: 5px;
         cursor: pointer;
@@ -27,11 +26,6 @@ st.markdown("""
         background-color: #e0e2e6;
     }
 
-    .stRadio [role=radiogroup] label[data-checked=true] {
-        background-color: #4CAF50 !important;
-        color: white !important;
-    }
-
     /* Hide the default radio button */
     .stRadio [role=radiogroup] input {
         clip: rect(0 0 0 0);
@@ -41,16 +35,6 @@ st.markdown("""
         position: absolute;
         white-space: nowrap;
         width: 1px;
-    }
-
-    /* Circular image styling */
-    .circular-image {
-        width: 300px;
-        height: 300px;
-        border-radius: 50%;
-        object-fit: cover;
-        display: block;
-        margin: 2rem auto;
     }
 </style>
 """, unsafe_allow_html=True)
