@@ -100,5 +100,3 @@ def main():
     elif user_choice == "Exit":
         st.write("Proceeding to main menu...")
 
-if _name_ == "_main_":
-    main()

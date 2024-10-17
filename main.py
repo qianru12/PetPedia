@@ -52,8 +52,8 @@ with col1:
     )
 
 with col2:
-    # if main_selection == "Animal Identification":
-    #     animalIdentification.animal_identification()
+    if main_selection == "Animal Identification":
+        animalIdentification.main()
 
     if main_selection == "Pets":
         pets.show_pets_navigation()
