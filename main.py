@@ -70,10 +70,10 @@ with col2:
         st.write("Select a page from the left sidebar.")
 
         # Add the image with HTML to make it circular
-        st.markdown("""
-            <img src="image_2024-10-16_10-49-09.png" class="circular-image">
-        """, unsafe_allow_html=True)
+        # st.markdown("""
+        #     <img src="image_2024-10-16_10-49-09.png" class="circular-image">
+        # """, unsafe_allow_html=True)
 
         # Alternatively, if you want to use st.image with local file:
-        # image = Image.open("your_image_path.jpg")
-        # st.image(image, width=300)  # Note: This won't be circular
+        image = Image.open("image_2024-10-16_10-49-09.png")
+        st.image(image, width=300)  # Note: This won't be circular
