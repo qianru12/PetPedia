@@ -11,7 +11,7 @@ def get_image_url(image):
 
 # Function to insert pet data into SQLite database
 def insert_pet_data(pet_type, age, breed, mood, health_condition, image_url):
-    conn = sqlite3.connect('petpedia.db')
+    conn = sqlite3.connect('PetPedia.db')
     cur = conn.cursor()
     cur.execute('''
     INSERT INTO pets (pet_type, age, breed, mood, health_condition, image_url)
