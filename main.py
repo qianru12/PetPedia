@@ -3,9 +3,10 @@ from pets import pets
 import animalIdentification
 import test
 
-# Custom CSS for radio buttons
+# Custom CSS for radio buttons and circular image
 st.markdown("""
 <style>
+    /* Existing radio button styles */
     div.row-widget.stRadio > div {
         flex-direction: column;
         align-items: stretch;
@@ -25,43 +26,54 @@ st.markdown("""
         background-color: #4CAF50;
         color: white;
     }
-    /* Hide the radio button circle */
     div.row-widget.stRadio > div[role="radiogroup"] input[type="radio"] {
         position: absolute;
         opacity: 0;
         width: 0;
         height: 0;
     }
-    /* Adjust spacing to account for hidden radio button */
     div.row-widget.stRadio > div[role="radiogroup"] > label > div:first-child {
         display: none;
+    }
+
+    /* New circular image styles */
+    .circular-image {
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        object-fit: cover;
+        display: block;
+        margin: 2rem auto;
     }
 </style>
 """, unsafe_allow_html=True)
 
 # Create two columns for layout
-col1, col2 = st.columns([1, 3])  # Adjust the ratio for width (1:3 is an example)
+col1, col2 = st.columns([1, 3])
 
 # Left-side navigation
 with col1:
     st.sidebar.title("Main Navigation")
-    # Set default to "Home" by specifying index=2 (as "Home" is the 3rd option in the list)
     main_selection = st.sidebar.radio(
         "Select a Page", 
         ["Animal Identification", "Pets", "Home"], 
-        index=2  # Set the default selection to "Home"
+        index=2
     )
 
 with col2:
     if main_selection == "Animal Identification":
         animalIdentification.main()
-
-    if main_selection == "Pets":
+    elif main_selection == "Pets":
         pets.show_pets_navigation()
-
-    # if main_selection == "Test":
-    #     test.show_feature()
-        
-    if main_selection == "Home":
+    elif main_selection == "Home":
         st.title("Welcome to PetPedia")
         st.write("Select a page from the left sidebar.")
+
+        # Add the image with HTML to make it circular
+        st.markdown("""
+            <img src="image_2024-10-16_10-49-09.png.png" class="circular-image">
+        """, unsafe_allow_html=True)
+
+        # Alternatively, if you want to use st.image with local file:
+        # image = Image.open("your_image_path.jpg")
+        # st.image(image, width=300)  # Note: This won't be circular
