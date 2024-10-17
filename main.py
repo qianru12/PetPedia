@@ -61,16 +61,7 @@ with col2:
 
     if main_selection == "addPetTest":
         test.show_features()
-    else:
-        st.title("Welcome to PetPedia")
-        st.write("Select a page from the left sidebar.")
-
-with col3:
-    if main_selection == "Animal Identification":
-        animalIdentification.main()
-
-    if main_selection == "Pets":
-        pets.show_pets_navigation()
+        
     else:
         st.title("Welcome to PetPedia")
         st.write("Select a page from the left sidebar.")
