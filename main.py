@@ -48,7 +48,7 @@ with col1:
     # Set default to "Home" by specifying index=2 (as "Home" is the 3rd option in the list)
     main_selection = st.sidebar.radio(
         "Select a Page", 
-        ["Animal Identification", "Pets", "Home"], 
+        ["Animal Identification", "Pets", "Home", "Test"], 
         index=2  # Set the default selection to "Home"
     )
 
