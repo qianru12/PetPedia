@@ -53,8 +53,8 @@ def show_navbar():
 # Function to manage which feature is shown
 def show_pets_navigation():
     # Initialize session state
-    if 'nav' not in st.session_state:
-        st.session_state['nav'] = "Food and Supply Recommendations"  # Default selection
+    # if 'nav' not in st.session_state:
+    #     st.session_state['nav'] = "Food and Supply Recommendations"  # Default selection
     # Render the sticky navbar
     show_navbar()
     # Display the selected feature
