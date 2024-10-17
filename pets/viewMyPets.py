@@ -2,7 +2,7 @@ import sqlite3
 import streamlit as st
 from PIL import Image
 from io import BytesIO
-import openai  # Ensure you have the OpenAI package installed
+from openai import OpenAI  # Ensure you have the OpenAI package installed
 
 
 client = OpenAI(api_key=st.secrets['OPENAI_API_KEY'])
