@@ -79,7 +79,7 @@ def show_pet_form():
             st.error("Please upload an image.")
 
 # Fetch and display pet data
-def fetch_pet_data():
+def fetch_all_pet_data():
     conn = sqlite3.connect('PetPedia.db')
     cur = conn.cursor()
     cur.execute('SELECT * FROM pets')
@@ -87,18 +87,26 @@ def fetch_pet_data():
     conn.close()
     return rows
 
-def analyze_pet_data():
-    pet_data = fetch_pet_data()
+# Fetch data for a specific pet
+def fetch_pet_data(pet_id):
+    conn = sqlite3.connect('PetPedia.db')
+    cur = conn.cursor()
+    cur.execute('SELECT * FROM pets WHERE id = ?', (pet_id,))
+    row = cur.fetchone()
+    conn.close()
+    return row
+
+def analyze_pet_data(pet_data):
     if not pet_data:
         return "No pet data available for analysis."
 
-    pet_info = ", ".join([f"Pet Type: {row[2]}, Age: {row[3]}, Breed: {row[4]}, Personality: {row[5]}, Health Condition: {row[6]}" for row in pet_data])
+    pet_info = f"Pet Type: {pet_data[2]}, Age: {pet_data[3]}, Breed: {pet_data[4]}, Personality: {pet_data[5]}, Health Condition: {pet_data[6]}"
     model = genai.GenerativeModel("gemini-1.5-flash")
     response = model.generate_content(
-        f"""Pet information: {pet_info}. According to the information provided, generate a comprehensive care guide for these pets based on their characteristics. The guide should include detailed information on the following aspects:
+        f"""Pet information: {pet_info}. According to the information provided, generate a comprehensive care guide for this pet based on its characteristics. The guide should include detailed information on the following aspects:
 Feeding: Frequency, portion size, recommended diet types, and potential dietary restrictions.
 Exercise: Daily requirements, suitable activities, and considerations for different ages and energy levels.
-Grooming: Frequency, necessary tools, and specific grooming techniques for the pets' coat types.
+Grooming: Frequency, necessary tools, and specific grooming techniques for the pet's coat type.
 Training: Basic obedience commands, socialization methods, and potential behavioral challenges.
 Health: Common health issues, preventative measures, and recommended vaccination schedule.
 Environmental Enrichment: Ideas for stimulating mental and physical well-being.
@@ -108,27 +116,33 @@ Socialization: Importance of early socialization, opportunities, and potential c
 # Streamlit app to display pet data
 def show_pet_data():
     st.title("Pet Information")
-    pet_data = fetch_pet_data()
+    all_pets = fetch_all_pet_data()
 
-    if pet_data:
-        for row in pet_data:
-            if row[7]:  # image_url is now at index 7
-                st.image(row[7], caption=f"{row[1]} Avatar")  # row[1] is now the name
+    if all_pets:
+        pet_names = [f"{row[1]} (ID: {row[0]})" for row in all_pets]
+        selected_pet = st.selectbox("Select a pet to view:", pet_names)
+
+        selected_pet_id = int(selected_pet.split("(ID: ")[1].strip(")"))
+        pet_data = fetch_pet_data(selected_pet_id)
+
+        if pet_data:
+            if pet_data[7]:  # image_url
+                st.image(pet_data[7], caption=f"{pet_data[1]} Avatar")
             st.write("---")
-            st.markdown(f"## Pet ID: {row[0]}")
-            st.markdown(f"### Name: {row[1]}")
-            st.markdown(f"### Type: {row[2]}")
-            st.markdown(f"**Age**: {row[3]} years")
-            st.markdown(f"**Breed**: {row[4]}")
-            st.markdown(f"**Personality**: {row[5]}")
-            st.markdown(f"**Health Condition**: {row[6]}")
+            st.markdown(f"## Pet ID: {pet_data[0]}")
+            st.markdown(f"### Name: {pet_data[1]}")
+            st.markdown(f"### Type: {pet_data[2]}")
+            st.markdown(f"**Age**: {pet_data[3]} years")
+            st.markdown(f"**Breed**: {pet_data[4]}")
+            st.markdown(f"**Personality**: {pet_data[5]}")
+            st.markdown(f"**Health Condition**: {pet_data[6]}")
 
             st.write("---")
 
-        # Display the analysis after listing all pets
-        st.subheader("Pet Care Analysis")
-        analysis = analyze_pet_data()
-        st.write(analysis)
+            # Display the analysis for the selected pet
+            st.subheader("Pet Care Analysis")
+            analysis = analyze_pet_data(pet_data)
+            st.write(analysis)
     else:
         st.write("No pet data found.")
 
