@@ -23,7 +23,7 @@ st.markdown("""
     }
 
     .stRadio [role=radiogroup] label:hover {
-        background-color: #e0e2e6;
+        background-color: #555;
     }
 
     /* Hide the default radio button */
