@@ -2,27 +2,22 @@ import sqlite3
 import streamlit as st
 from PIL import Image
 from io import BytesIO
-import requests  # For making HTTP requests to external API
+import openai  # Ensure you have the OpenAI package installed
 
-# Mock DALL-E 3 API call to generate and retrieve image URL (replace with actual API call)
-def get_image_url(image):
-    # Convert image to the required format if necessary and call your DALL-E API here
-    endpoint = "https://api.dall-e.com/generate"  # Replace with actual endpoint
-    headers = {
-        "Authorization": "Bearer YOUR_API_KEY"  # Replace with your actual API key
-    }
-    files = {'file': image}
+# Set your OpenAI API key
+client = OpenAI(api_key=st.secrets['OPENAI_API_KEY'])
 
+# Function to edit image using DALL-E
+def edit_image_with_dalle(image):
+    image.seek(0)  # Ensure the stream is at the start
     try:
-        response = requests.post(endpoint, headers=headers, files=files)
-        if response.status_code == 200:
-            data = response.json()
-            return data['generated_image_url']
-        else:
-            st.error("Failed to generate image. Please try again.")
-            return ""
+        response = client.image.edit(
+            image=image,
+            instructions="Create a vivid style picture similar to this one."
+        )
+        return response['data']['url']
     except Exception as e:
-        st.error(f"An error occurred: {e}")
+        st.error(f"Error using DALL-E: {e}")
         return ""
 
 # Function to insert pet data into SQLite database
@@ -57,24 +52,24 @@ def show_pet_form():
 
     if st.button("Submit"):
         if uploaded_image is not None:
-            image = Image.open(uploaded_image)  # Removed BytesIO as it's already handled by PIL
+            image = Image.open(uploaded_image)
             file_stream = BytesIO()
             image.save(file_stream, format='PNG')
             file_stream.seek(0)  # Reset stream position
 
-            # Generate the image URL using the API
-            image_url = get_image_url(file_stream)
+            # Generate the image URL using DALL-E API
+            image_url = edit_image_with_dalle(file_stream)
 
             if image_url:
                 # Insert all details into the database
                 insert_pet_data(pet_type, age, breed, personality, health_condition, image_url)
                 st.success("Pet information saved successfully!")
             else:
-                st.error("Image generation failed. Please check credentials.")
+                st.error("Image generation failed.")
         else:
             st.error("Please upload an image.")
 
-# Function to fetch and display pet data
+# Fetch and display pet data
 def fetch_pet_data():
     conn = sqlite3.connect('PetPedia.db')
     cur = conn.cursor()
@@ -136,3 +131,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+```
