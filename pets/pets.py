@@ -61,13 +61,13 @@ def show_pets_navigation():
     if st.session_state['nav'] == "Food and Supply Recommendations":
         foodAndSupplyRecommendation.show_feature()
 
-    elif st.session_state['nav'] == "Pet Health Monitoring":
+    if st.session_state['nav'] == "Pet Health Monitoring":
         petHealthMonitoringAndAlerts.show_feature()
 
-    elif st.session_state['nav'] == "Vet Locator":
+    if st.session_state['nav'] == "Vet Locator":
         vetLocator.show_feature()
 
-    elif st.session_state['nav'] == "Chatbot":
+    if st.session_state['nav'] == "Chatbot":
         chatbot.show_feature()
 
 # Handle the form submission from the navbar
