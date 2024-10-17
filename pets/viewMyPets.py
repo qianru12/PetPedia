@@ -1,22 +1,38 @@
 import sqlite3
 import streamlit as st
-from io import BytesIO
 from PIL import Image
+from io import BytesIO
+import requests  # For making HTTP requests to external API
 
-# Mock GPT-4 API call to convert image to URL (replace with actual API call)
+# Mock DALL-E 3 API call to generate and retrieve image URL (replace with actual API call)
 def get_image_url(image):
-    # Assuming the API returns a URL when you pass the image.
-    # Here we mock it by just returning a placeholder URL.
-    return "https://yourimagestorage.com/uploaded_image.jpg"
+    # Convert image to the required format if necessary and call your DALL-E API here
+    endpoint = "https://api.dall-e.com/generate"  # Replace with actual endpoint
+    headers = {
+        "Authorization": "Bearer YOUR_API_KEY"  # Replace with your actual API key
+    }
+    files = {'file': image}
+
+    try:
+        response = requests.post(endpoint, headers=headers, files=files)
+        if response.status_code == 200:
+            data = response.json()
+            return data['generated_image_url']
+        else:
+            st.error("Failed to generate image. Please try again.")
+            return ""
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
+        return ""
 
 # Function to insert pet data into SQLite database
-def insert_pet_data(pet_type, age, breed, mood, health_condition, image_url):
+def insert_pet_data(pet_type, age, breed, personality, health_condition, image_url):
     conn = sqlite3.connect('PetPedia.db')
     cur = conn.cursor()
     cur.execute('''
-    INSERT INTO pets (pet_type, age, breed, mood, health_condition, image_url)
+    INSERT INTO pets (pet_type, age, breed, personality, health_condition, image_url)
     VALUES (?, ?, ?, ?, ?, ?)
-    ''', (pet_type, age, breed, mood, health_condition, image_url))
+    ''', (pet_type, age, breed, personality, health_condition, image_url))
     conn.commit()
     conn.close()
 
@@ -30,30 +46,37 @@ def show_pet_form():
 
     age = st.number_input("Age", min_value=0)
     breed = st.text_input("Breed")
-    mood = st.selectbox("Mood", ["Happy", "Sad", "Aggressive", "Calm", "Other"])
-    if mood == "Other":
-        mood = st.text_input("Specify Mood")
+    personality = st.selectbox("Personality", ["Playful and Energetic", "Calm and Relaxed", "Intelligent and Observant", "Fearful and Anxious", "Social and Outgoing", "Other"])
+    if personality == "Other":
+        personality = st.text_input("Specify Personality")
 
-    health_condition = st.text_area("Health Condition")
+    health_condition = st.text_area("Health Condition", value="healthy")
 
     # Image upload feature
     uploaded_image = st.file_uploader("Upload Pet Image", type=["png", "jpg", "jpeg"])
 
     if st.button("Submit"):
         if uploaded_image is not None:
-            image = Image.open(BytesIO(uploaded_image.read()))  # Read the uploaded image
-            image_url = get_image_url(image)  # Call GPT-4 or other API to get the image URL
-            st.success(f"Image uploaded successfully! URL: {image_url}")
+            image = Image.open(uploaded_image)  # Removed BytesIO as it's already handled by PIL
+            file_stream = BytesIO()
+            image.save(file_stream, format='PNG')
+            file_stream.seek(0)  # Reset stream position
 
-            # Insert all details into the database
-            insert_pet_data(pet_type, age, breed, mood, health_condition, image_url)
-            st.success("Pet information saved successfully!")
+            # Generate the image URL using the API
+            image_url = get_image_url(file_stream)
+
+            if image_url:
+                # Insert all details into the database
+                insert_pet_data(pet_type, age, breed, personality, health_condition, image_url)
+                st.success("Pet information saved successfully!")
+            else:
+                st.error("Image generation failed. Please check credentials.")
         else:
             st.error("Please upload an image.")
 
 # Function to fetch and display pet data
 def fetch_pet_data():
-    conn = sqlite3.connect('petpedia.db')
+    conn = sqlite3.connect('PetPedia.db')
     cur = conn.cursor()
     cur.execute('SELECT * FROM pets')
     rows = cur.fetchall()
@@ -71,7 +94,7 @@ def show_pet_data():
             st.markdown(f"### Type: {row[1]}")
             st.markdown(f"**Age**: {row[2]} years")
             st.markdown(f"**Breed**: {row[3]}")
-            st.markdown(f"**Mood**: {row[4]}")
+            st.markdown(f"**Personality**: {row[4]}")
             st.markdown(f"**Health Condition**: {row[5]}")
 
             # Display pet image
@@ -91,7 +114,7 @@ def create_table():
         pet_type TEXT,
         age INTEGER,
         breed TEXT,
-        mood TEXT,
+        personality TEXT,
         health_condition TEXT,
         image_url TEXT
     )

@@ -41,7 +41,7 @@ def show_feature():
 
         # Collect user input for health condition
         health_condition = st.text_area("Describe any Health Conditions",
-                                        value="None")
+                                        value="Healthy")
 
         return pet_type, pet_age, pet_breed, pet_mood, health_condition
 
