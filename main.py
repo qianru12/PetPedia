@@ -3,40 +3,47 @@ from pets import pets
 import animalIdentification
 import test
 
-# Custom CSS for radio buttons and circular image
+# Updated CSS for radio buttons and circular image
 st.markdown("""
 <style>
-    /* Existing radio button styles */
-    div.row-widget.stRadio > div {
+    /* Radio button styling */
+    .stRadio [role=radiogroup] {
+        padding: 10px;
+        display: flex;
         flex-direction: column;
-        align-items: stretch;
+        gap: 10px;
     }
-    div.row-widget.stRadio > div[role="radiogroup"] > label {
+
+    .stRadio [role=radiogroup] label {
+        background-color: #f0f2f6;
         padding: 10px 15px;
-        margin: 4px 0;
         border-radius: 5px;
         cursor: pointer;
         transition: background-color 0.3s, color 0.3s;
-        text-align: center;
-    }
-    div.row-widget.stRadio > div[role="radiogroup"] > label:hover {
-        background-color: #555;
-    }
-    div.row-widget.stRadio > div[role="radiogroup"] > label[data-checked="true"] {
-        background-color: #4CAF50;
-        color: white;
-    }
-    div.row-widget.stRadio > div[role="radiogroup"] input[type="radio"] {
-        position: absolute;
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-    div.row-widget.stRadio > div[role="radiogroup"] > label > div:first-child {
-        display: none;
+        width: 100%;
     }
 
-    /* New circular image styles */
+    .stRadio [role=radiogroup] label:hover {
+        background-color: #e0e2e6;
+    }
+
+    .stRadio [role=radiogroup] label[data-checked=true] {
+        background-color: #4CAF50 !important;
+        color: white !important;
+    }
+
+    /* Hide the default radio button */
+    .stRadio [role=radiogroup] input {
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+        height: 1px;
+        overflow: hidden;
+        position: absolute;
+        white-space: nowrap;
+        width: 1px;
+    }
+
+    /* Circular image styling */
     .circular-image {
         width: 300px;
         height: 300px;
