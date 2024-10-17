@@ -137,9 +137,6 @@ def create_table():
     conn = sqlite3.connect('PetPedia.db')
     cur = conn.cursor()
 
-    # Drop the existing table
-    cur.execute('DROP TABLE IF EXISTS pets')
-
     # Create the new table with the 'name' field
     cur.execute('''
     CREATE TABLE IF NOT EXISTS pets (
