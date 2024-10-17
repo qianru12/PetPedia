@@ -91,7 +91,7 @@ def analyze_pet_data():
     for row in pet_data:
         pet_info = f"Pet Type: {row[1]}, Age: {row[2]}, Breed: {row[3]}, Personality: {row[4]}, Health Condition: {row[5]}"
     model = genai.GenerativeModel("gemini-1.5-flash")
-    response = model.generate_content(f"According to the information provided, generate a comprehensive care guide for a specific pet based on the provided characteristics. The guide should include detailed information on the following aspects:
+    response = model.generate_content(f"Pet information: {pet_info}. According to the information provided, generate a comprehensive care guide for a specific pet based on the provided characteristics. The guide should include detailed information on the following aspects:
 
 Feeding: Frequency, portion size, recommended diet types, and potential dietary restrictions.
 Exercise: Daily requirements, suitable activities, and considerations for different ages and energy levels.
@@ -99,8 +99,8 @@ Grooming: Frequency, necessary tools, and specific grooming techniques for the p
 Training: Basic obedience commands, socialization methods, and potential behavioral challenges.
 Health: Common health issues, preventative measures, and recommended vaccination schedule.
 Environmental Enrichment: Ideas for stimulating mental and physical well-being.
-Socialization: Importance of early socialization, opportunities, and potential challenges. Pet information: {pet_info}"
-    ))
+Socialization: Importance of early socialization, opportunities, and potential challenges."
+    )
     return(response)
     
 # Streamlit app to display pet data
