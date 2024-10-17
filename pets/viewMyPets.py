@@ -1,12 +1,20 @@
+import streamlit as st
 from openai import OpenAI
-from google.colab import userdata
+import google.generativeai as genai
 from PIL import Image
 import io
-import base64
-import google.generativeai as genai
+import sqlite3
 
+# Configure API clients
 client = OpenAI(api_key=st.secrets['OPENAI_API_KEY'])
-genai.configure(api_key = userdata.get("GOOGLE_API_KEY"))
+genai.configure(api_key=st.secrets['GOOGLE_API_KEY'])
+
+# Function to create description using Gemini
+def create_description(image):
+    image_pil = Image.open(image)
+    model = genai.GenerativeModel("gemini-1.5-pro-vision")
+    response = model.generate_content(["Describe in detail the animal in this image", image_pil])
+    return response.text
 
 # Function to edit image using DALL-E
 def create_image_from_description(prompt):
@@ -15,20 +23,13 @@ def create_image_from_description(prompt):
             model="dall-e-3",
             prompt=prompt,
             size="512x512",
-            quality="standard"
+            quality="standard",
+            n=1
         )
         return response.data[0].url
     except Exception as e:
-        print(f"An error occurred: {e}")
+        st.error(f"An error occurred: {e}")
         return ""
-
-def create_description(image):
-  import PIL.Image
-  image = PIL.Image.open(image)
-  model = genai.GenerativeModel("gemini-1.5-flash")
-  response = model.generate_content(["describe in details about the animal in the image", image])
-  return response
-
 
 # Function to insert pet data into SQLite database
 def insert_pet_data(pet_type, age, breed, personality, health_condition, image_url):
@@ -62,15 +63,15 @@ def show_pet_form():
 
     if st.button("Submit"):
         if uploaded_image is not None:
-            prompt = create_description()
-            image_url = create_image_from_description(f"Base on this description: {prompt},create an avatar for this animal.")
-
-
+            description = create_description(uploaded_image)
+            prompt = f"Based on this description: {description}, create an avatar for this animal."
+            image_url = create_image_from_description(prompt)
 
             if image_url:
                 # Insert all details into the database
                 insert_pet_data(pet_type, age, breed, personality, health_condition, image_url)
                 st.success("Pet information saved successfully!")
+                st.image(image_url, caption="Generated Pet Avatar")
             else:
                 st.error("Image generation failed.")
         else:
@@ -101,7 +102,7 @@ def show_pet_data():
 
             # Display pet image
             if row[6]:
-                st.image(row[6], caption=f"{row[1]} Image")
+                st.image(row[6], caption=f"{row[1]} Avatar")
             st.write("---")
     else:
         st.write("No pet data found.")
