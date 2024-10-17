@@ -51,12 +51,11 @@ with col1:
         index=2  # Set the default selection to "Home"
     )
 
-# Right-side navigation (only appears if "Pets" is selected)
 with col2:
-    if main_selection == "Animal Identification":
-        animalIdentification.animal_identification()
+    # if main_selection == "Animal Identification":
+    #     animalIdentification.animal_identification()
 
-    elif main_selection == "Pets":
+    if main_selection == "Pets":
         pets.show_pets_navigation()
     else:
         st.title("Welcome to PetPedia")
