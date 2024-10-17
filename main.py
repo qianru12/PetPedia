@@ -71,7 +71,7 @@ with col2:
 
         # Add the image with HTML to make it circular
         st.markdown("""
-            <img src="image_2024-10-16_10-49-09.png.png" class="circular-image">
+            <img src="image_2024-10-16_10-49-09.png" class="circular-image">
         """, unsafe_allow_html=True)
 
         # Alternatively, if you want to use st.image with local file:
