@@ -83,7 +83,7 @@ def show_pet_data():
 
 # Create a table to store pet details, including image URLs
 def create_table():
-    conn = sqlite3.connect('petpedia.db')
+    conn = sqlite3.connect('PetPedia.db')
     cur = conn.cursor()
     cur.execute('''
     CREATE TABLE IF NOT EXISTS pets (
@@ -101,7 +101,6 @@ def create_table():
 
 # Main application
 def main():
-    st.write("Test")
     st.sidebar.title("Navigation")
     page = st.sidebar.radio("Go to", ["Add Pet", "View Pets"])
 
