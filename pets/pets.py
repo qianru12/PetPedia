@@ -1,5 +1,5 @@
 import streamlit as st
-from pets import foodAndSupplyRecommendation, petHealthMonitoringAndAlerts, vetLocator, chatbot
+from pets import foodAndSupplyRecommendation, viewMyPets, vetLocator, chatbot
 
 # Function to render the sticky navigation bar
 def show_navbar():
@@ -46,8 +46,8 @@ def show_navbar():
             st.session_state['nav'] = "Food and Supply Recommendations"
 
     with cols[1]:
-        if st.button("Health Monitoring"):
-            st.session_state['nav'] = "Pet Health Monitoring"
+        if st.button("View My Pets"):
+            st.session_state['nav'] = "View My Pets"
 
     with cols[2]:
         if st.button("Vet Locator"):
@@ -70,8 +70,8 @@ def show_pets_navigation():
     if st.session_state['nav'] == "Food and Supply Recommendations":
         foodAndSupplyRecommendation.show_feature()
 
-    elif st.session_state['nav'] == "Pet Health Monitoring":
-        petHealthMonitoringAndAlerts.show_feature()
+    elif st.session_state['nav'] == "viewMyPets":
+        viewMyPets.show_feature()
 
     elif st.session_state['nav'] == "Vet Locator":
         vetLocator.show_feature()
