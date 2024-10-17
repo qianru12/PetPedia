@@ -10,7 +10,6 @@ st.markdown("""
         align-items: stretch;
     }
     div.row-widget.stRadio > div[role="radiogroup"] > label {
-        background-color: #f0f2f6;
         padding: 10px 15px;
         margin: 4px 0;
         border-radius: 5px;
