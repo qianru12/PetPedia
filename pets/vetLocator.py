@@ -6,7 +6,7 @@ import os
 
 API_KEY = os.getenv('GOOGLE_API_KEY')
 
-def get_vet_clinics(lat, lng, radius=10000):
+def get_vet_clinics(lat, lng, radius=10000):  # Radius is 10,000 meters (10 km)
     url = f"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location={lat},{lng}&radius={radius}&type=veterinary_care&key={API_KEY}"
     response = requests.get(url)
 
@@ -30,13 +30,26 @@ def get_vet_clinics(lat, lng, radius=10000):
                 'name': result.get('name', 'Name not available'),
                 'location': [result['geometry']['location']['lat'], result['geometry']['location']['lng']],
                 'address': result.get('vicinity', 'Address not available'),
-                'status': result.get('business_status', 'Status not available')
+                'status': result.get('business_status', 'Status not available'),
+                'place_id': result.get('place_id')
             }
             vet_clinics.append(clinic)
         return vet_clinics
     else:
         st.error(f"Error retrieving vet clinics: {response.status_code}")
         return []
+
+def get_place_details(place_id):
+    url = f"https://maps.googleapis.com/maps/api/place/details/json?place_id={place_id}&fields=name,formatted_phone_number&key={API_KEY}"
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        result = response.json().get("result", {})
+        phone_number = result.get('formatted_phone_number', 'Phone not available')
+        return phone_number
+    else:
+        st.error(f"Error retrieving details for place_id {place_id}: {response.status_code}")
+        return 'Phone not available'
 
 def vet_locator(initial_location):
     st.title("Vet Clinic Locator")
@@ -67,12 +80,19 @@ def vet_locator(initial_location):
 
     # Add a "Confirm Location" button for the user to confirm the selected location
     if st.button('Confirm Location'):
-        # Set the flag in session state to show the second map
         st.session_state.show_vet_map = True
 
     # Conditionally render the second map if the "Confirm Location" button was clicked
     if st.session_state.show_vet_map:
+        # Call Google Places API to retrieve nearby vet clinics
         vet_results = get_vet_clinics(user_lat, user_lng)
+
+        # Fetch phone numbers for each clinic
+        for vet in vet_results:
+            if 'place_id' in vet:
+                vet['phone'] = get_place_details(vet['place_id'])
+            else:
+                vet['phone'] = 'Phone not available'
 
         # Second map: Create a new map centered at the updated location
         new_map = folium.Map(location=[user_lat, user_lng], zoom_start=13)
@@ -85,7 +105,8 @@ def vet_locator(initial_location):
             name = vet.get('name', 'Name not available')
             address = vet.get('address', 'Address not available')
             status = vet.get('status', 'Status not available')
-            popup_text = f"{name}\nStatus: {status}\nAddress: {address}"
+            phone = vet.get('phone', 'Phone not available')
+            popup_text = f"{name}\nStatus: {status}\nAddress: {address}\nPhone: {phone}"
             folium.Marker(location=vet['location'], popup=popup_text, icon=folium.Icon(color="green")).add_to(new_map)
 
         # Display the updated second map with clinic markers
@@ -98,8 +119,8 @@ def vet_locator(initial_location):
             st.write(f"*Name*: {vet.get('name', 'Name not available')}")
             st.write(f"*Status*: {vet.get('status', 'Status not available')}")
             st.write(f"*Address*: {vet.get('address', 'Address not available')}")
+            st.write(f"*Phone*: {vet.get('phone', 'Phone not available')}")
             st.write("---")
     else:
         st.write("Confirm your location to see nearby vet clinics.")
 
-vet_locator([3.1390, 101.6869])
