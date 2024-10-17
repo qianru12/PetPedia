@@ -41,15 +41,19 @@ def show_navbar():
     with cols[0]:
         if st.button("Food & Supply"):
             st.session_state['nav'] = "Food and Supply Recommendations"
+            st.experimental_rerun()
     with cols[1]:
         if st.button("View My Pets"):
             st.session_state['nav'] = "View My Pets"
+            st.experimental_rerun()
     with cols[2]:
         if st.button("Vet Locator"):
             st.session_state['nav'] = "Vet Locator"
+            st.experimental_rerun()
     with cols[3]:
         if st.button("Chatbot"):
             st.session_state['nav'] = "Chatbot"
+            st.experimental_rerun()
 # Function to manage which feature is shown
 def show_pets_navigation():
     # Initialize session state only once
