@@ -150,7 +150,7 @@ def show_pet_data():
 def create_table():
     conn = sqlite3.connect('PetPedia.db')
     cur = conn.cursor()
-    cur.execute('DROP TABLE IF EXISTS pets')
+    # cur.execute('DROP TABLE IF EXISTS pets')
 
     # Create the new table with the 'name' field
     cur.execute('''
