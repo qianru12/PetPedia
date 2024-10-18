@@ -76,7 +76,7 @@ def show_feature():
                                                       user_input
                                                   }],
                                                   temperature=1.0,
-                                                  max_tokens=200)
+                                                  max_tokens=500)
 
         return response.choices[0].message.content
 
